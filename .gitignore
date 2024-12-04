@@ -1,0 +1,15 @@
+.idea/
+target/
+*.iml
+target/
+logs/
+out/
+**/null
+null
+*.log
+logs/**
+logs
+.idea/
+**/.flattened-pom.xml
+**.iml
+**/pom.xml.versionsBackup

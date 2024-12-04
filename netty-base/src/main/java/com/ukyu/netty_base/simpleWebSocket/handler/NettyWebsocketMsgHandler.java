@@ -1,7 +1,9 @@
-package com.ukyu.netty_base.handler;
+package com.ukyu.netty_base.simpleWebSocket.handler;
 
+import com.ukyu.netty_base.simpleWebSocket.WebSocketFrameProcessor;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 
 /**
  * @author ukyu
@@ -9,6 +11,13 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  * @dateTime 2024/12/4
  */
 public class NettyWebsocketMsgHandler extends ChannelInboundHandlerAdapter {
+
+    private WebSocketFrameProcessor webSocketFrameProcessor;
+
+    public NettyWebsocketMsgHandler(WebSocketFrameProcessor webSocketFrameProcessor) {
+        this.webSocketFrameProcessor = webSocketFrameProcessor;
+    }
+
 
     /**
      * Calls {@link ChannelHandlerContext#fireChannelRegistered()} to forward
@@ -19,6 +28,7 @@ public class NettyWebsocketMsgHandler extends ChannelInboundHandlerAdapter {
     
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+
         ctx.fireChannelRegistered();
     }
 
@@ -64,10 +74,15 @@ public class NettyWebsocketMsgHandler extends ChannelInboundHandlerAdapter {
      *
      * Sub-classes may override this method to change behavior.
      */
-    
+    // 读取消息
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ctx.fireChannelRead(msg);
+        if (msg instanceof WebSocketFrame) {
+
+            webSocketFrameProcessor.process(ctx, (WebSocketFrame) msg);
+        }
+
+//        ctx.fireChannelRead(msg);
     }
 
     /**

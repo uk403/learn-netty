@@ -22,7 +22,14 @@
                 <artifactId>netty-all</artifactId>
                 <version>4.1.115.Final</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>
