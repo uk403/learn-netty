@@ -31,8 +31,7 @@ public class StartNetty {
                     @Override
                     protected void initChannel(SocketChannel ch) {
                         ch.pipeline().addLast("http-codec", new HttpServerCodec());
-                        //  负责将 Http 的一些信息例如版本
-                        // 和 Http 的内容继承一个 FullHttpRequesst
+                        //  负责将 Http 的一些信息例如版本 和 Http 的内容继承一个 FullHttpRequesst
                         ch.pipeline().addLast("aggregator", new HttpObjectAggregator(65536));
                         ch.pipeline().addLast("logic", new NettyWebsocketMsgHandler(webSocketFrameProcessor));
                     }

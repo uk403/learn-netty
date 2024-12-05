@@ -3,6 +3,7 @@ package com.ukyu.netty_base.simpleWebSocket.handler;
 import com.ukyu.netty_base.simpleWebSocket.WebSocketFrameProcessor;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 
 /**
@@ -77,6 +78,13 @@ public class NettyWebsocketMsgHandler extends ChannelInboundHandlerAdapter {
     // 读取消息
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
+        // ws 第一次是http请求
+        if(msg instanceof FullHttpRequest)
+        {
+            webSocketFrameProcessor.processHttpRequest(ctx, (FullHttpRequest) msg);
+        }
+
         if (msg instanceof WebSocketFrame) {
 
             webSocketFrameProcessor.process(ctx, (WebSocketFrame) msg);
