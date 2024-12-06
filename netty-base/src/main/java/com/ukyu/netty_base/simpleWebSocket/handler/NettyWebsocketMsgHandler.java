@@ -3,8 +3,11 @@ package com.ukyu.netty_base.simpleWebSocket.handler;
 import com.ukyu.netty_base.simpleWebSocket.WebSocketFrameProcessor;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
  * @author ukyu
@@ -15,8 +18,15 @@ public class NettyWebsocketMsgHandler extends ChannelInboundHandlerAdapter {
 
     private WebSocketFrameProcessor webSocketFrameProcessor;
 
+    private ChannelGroup channelGroup;
+
     public NettyWebsocketMsgHandler(WebSocketFrameProcessor webSocketFrameProcessor) {
         this.webSocketFrameProcessor = webSocketFrameProcessor;
+        this.channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    }
+
+    public ChannelGroup getChannelGroup() {
+        return channelGroup;
     }
 
 
@@ -54,6 +64,8 @@ public class NettyWebsocketMsgHandler extends ChannelInboundHandlerAdapter {
     
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        channelGroup.add(ctx.channel());
+        System.out.println("active id:" + ctx.channel().id());
         ctx.fireChannelActive();
     }
 
@@ -66,6 +78,8 @@ public class NettyWebsocketMsgHandler extends ChannelInboundHandlerAdapter {
     
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        channelGroup.remove(ctx.channel());
+        System.out.println("inactive id:" + ctx.channel().id());
         ctx.fireChannelInactive();
     }
 
