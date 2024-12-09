@@ -2,6 +2,9 @@ package com.ukyu.netty_base.simpleWebSocket;
 
 import com.ukyu.netty_base.simpleWebSocket.handler.NettyWebsocketMsgHandler;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -13,6 +16,8 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.CharsetUtil;
+import io.netty.util.ResourceLeakDetector;
+import io.netty.util.internal.PlatformDependent;
 
 import java.util.Scanner;
 
@@ -25,6 +30,10 @@ public class StartNetty {
 
     private static final NettyWebsocketMsgHandler wsMsgHandler;
 
+
+    public static final int _1MB = 1024 * 1024;
+    public static final int _17MB = 17 * 1024 * 1024;
+
     static {
         WebSocketFrameProcessor webSocketFrameProcessor = new WebSocketFrameProcessor();
         wsMsgHandler = new NettyWebsocketMsgHandler(webSocketFrameProcessor);
@@ -33,6 +42,12 @@ public class StartNetty {
     public static void main(String[] args) throws InterruptedException {
 
 
+//        System.out.println("Use direct buffer no cleaner: " + PlatformDependent.useDirectBufferNoCleaner());
+//        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
+//        PooledByteBufAllocator allocator = PooledByteBufAllocator.DEFAULT;
+//        ByteBuf directBuffer = allocator.directBuffer(Integer.MAX_VALUE);
+//        ByteBuf directBuffer1 = allocator.directBuffer(Integer.MAX_VALUE);
+//        System.out.println("Direct ByteBuf allocated with capacity: " + directBuffer.capacity());
 
         NioEventLoopGroup bossGroup = new NioEventLoopGroup(1);
         NioEventLoopGroup workerGroup =  new NioEventLoopGroup(4);
